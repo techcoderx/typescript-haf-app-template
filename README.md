@@ -53,7 +53,7 @@ Define additional configuration required in [config.js](https://github.com/techc
 
 ### Operation Validation and Execution
 
-Include the required validation for operations fetched from `myhaf_app.enum_op()` in [src/processor.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/processor.ts) file in `validateAndParse()` method. Execute the operations by the operation processing PL/pgSQL methods in `process()` within the same file.
+Include the required validation for operations fetched from `myhaf_app.enum_op()` in [src/processor.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/processor.ts) file in `validateAndParse()` method. Execute the operations by calling the operation processing PL/pgSQL methods in `process()` within the same file.
 
 ### Docker
 
