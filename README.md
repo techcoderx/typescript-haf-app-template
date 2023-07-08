@@ -33,7 +33,7 @@ Replace the environment variable prefix `HAFAPP_` in:
 
 Write the PostgreSQL table definitions in [src/sql/create_tables.sql](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/sql/create_tables.sql) file. All registered tables (forking app) must contain the column `hive_rowid` as shown in the example table. List the registered table names (without schema name) in [src/schema.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/schema.ts), under `HAF_TABLES` array.
 
-Then define foreign key definitions in the same file under `HAF_FKS` object.
+Then define foreign key definitions in the same file under `HAF_FKS` object, and list those definitions that has to be dropped when uninstalling the HAF app in [src/sql/drop_db.sql](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/sql/drop_db.sql).
 
 ### Function Definitions
 
@@ -54,6 +54,10 @@ Define additional configuration required in [config.js](https://github.com/techc
 ### Operation Validation and Execution
 
 Include the required validation for operations fetched from `myhaf_app.enum_op()` in [src/processor.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/processor.ts) file in `validateAndParse()` method. Execute the operations by calling the operation processing PL/pgSQL methods in `process()` within the same file.
+
+### State Providers
+
+Import the required state providers in [src/schema.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/schema.ts). The `accounts` state provider has been [included](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/schema.ts#L35-L37) as an example.
 
 ### Docker
 
