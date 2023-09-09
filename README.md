@@ -24,10 +24,10 @@ Replace every instance of `myhaf_user` with your actual HAF app API user in:
 * PostgREST start scripts in [scripts](https://github.com/techcoderx/typescript-haf-app-template/tree/main/scripts) folder (including docker)
 * This README file
 
-Replace the environment variable prefix `HAFAPP_` in:
+Replace the environment variable prefix `HAFAPP` in:
 * [.env.example](https://github.com/techcoderx/typescript-haf-app-template/blob/main/.env.example)
 * [Dockerfile](https://github.com/techcoderx/typescript-haf-app-template/blob/main/Dockerfile)
-* [config.js](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/config.js)
+* [config.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/config.ts)
 
 ### Table Definitions
 
@@ -49,7 +49,7 @@ Define Express API request types in [src/server_types.ts](https://github.com/tec
 
 ### Config Definitions
 
-Define additional configuration required in [config.js](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/config.js) and [config.d.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/config.d.ts) file. All constants are to be defined in [constants.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/config.ts).
+Define additional configuration required in [config.js](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/config.ts) file. All constants are to be defined in [constants.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/config.ts).
 
 ### Operation Validation and Execution
 
@@ -57,7 +57,7 @@ Include the required validation for operations fetched from `myhaf_app.enum_op()
 
 ### State Providers
 
-Import the required state providers in [src/schema.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/schema.ts). The `accounts` state provider has been [included](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/schema.ts#L35-L37) as an example.
+Import the required state providers in [src/schema.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/schema.ts). The `accounts` state provider has been [included](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/schema.ts#L38-L40) as an example.
 
 ### Docker
 

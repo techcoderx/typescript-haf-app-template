@@ -17,8 +17,8 @@ app.get('/', async (req,res) => {
     res.send(query.rows[0].home)
 })
 
-const server = app.listen(config.http_port,config.http_host,() => {
-    logger.info(`HAF app server listening to ${config.http_host+':'+config.http_port}`)
+const server = app.listen(config.httpPort,config.httpHost,() => {
+    logger.info(`HAF app server listening to ${config.httpHost+':'+config.httpPort}`)
 })
 
 let terminating = false

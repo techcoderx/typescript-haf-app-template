@@ -28,7 +28,7 @@ log4js.configure({
     categories: { 
         default: { 
             appenders: ['out', 'file'],
-            level: config.log_level,
+            level: config.logLevel,
             enableCallStack: true
         }
     }

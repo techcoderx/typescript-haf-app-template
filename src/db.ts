@@ -2,12 +2,12 @@ import pg from 'pg'
 import config from './config.js'
 import logger from './logger.js'
 
-const client = new pg.Client({ connectionString: config.postgres_url })
+const client = new pg.Client({ connectionString: config.postgresUrl })
 
 const db = {
     init: async () => {
         await client.connect()
-        logger.info('Connected to database',config.postgres_url)
+        logger.info('Connected to database',config.postgresUrl)
     },
     disconnect: async () => {
         await client.end()
