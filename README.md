@@ -94,6 +94,18 @@ GRANT myhaf_user TO myhaf_app;
 psql -f src/sql/create_apis.sql block_log
 ```
 
+## Installation
+```
+git clone https://github.com/techcoderx/typescript-haf-app-template
+cd typescript-haf-app-template
+npm i
+```
+
+## Compile
+```
+npm run compile
+```
+
 ## Sync
 ```bash
 npm start
