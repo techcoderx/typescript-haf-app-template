@@ -31,6 +31,12 @@ const schema = {
         // setup app tables
         await db.client.query(fs.readFileSync(__dirname+'/sql/create_tables.sql','utf-8'))
 
+        // fill with initial values
+        let startBlock = Math.max(START_BLOCK-1,0)
+        await db.client.query('START TRANSACTION;')
+        await db.client.query(`INSERT INTO ${SCHEMA_NAME}.state(last_processed_block, db_version) VALUES($1, $2);`,[startBlock,DB_VERSION])
+        await db.client.query('COMMIT;')
+
         // inheritance for forking app
         for (let t in HAF_TABLES)
             await db.client.query(`ALTER TABLE ${SCHEMA_NAME}.${HAF_TABLES[t]} INHERIT hive.${SCHEMA_NAME};`)
@@ -43,17 +49,17 @@ const schema = {
         await context.detach()
 
         // start block
-        let startBlock = Math.max(START_BLOCK-1,0)
-        logger.info('Set start block to #'+(startBlock+1))
+        await db.client.query('START TRANSACTION;')
         if (startBlock > 0) {
             logger.info('Updating state providers to starting block...')
             let start = new Date().getTime()
             await db.client.query('SELECT hive.app_state_providers_update($1,$2,$3);',[0,startBlock,APP_CONTEXT])
             logger.info('State providers updated in',(new Date().getTime()-start),'ms')
         }
-
-        // fill with initial values
-        await db.client.query(`INSERT INTO ${SCHEMA_NAME}.state(last_processed_block, db_version) VALUES($1, $2);`,[startBlock,DB_VERSION])
+        await db.client.query(`UPDATE ${SCHEMA_NAME}.state SET last_processed_block=$1;`,[startBlock])
+        await db.client.query(`SELECT hive.app_set_current_block_num($1,$2);`,[APP_CONTEXT,startBlock])
+        await db.client.query('COMMIT;')
+        logger.info('Set last processed block to #'+(startBlock))
 
         // create relevant functions
         await schema.createFx()
@@ -66,6 +72,7 @@ const schema = {
     },
     createFx: async () => {
         await db.client.query(fs.readFileSync(__dirname+'/sql/create_functions.sql','utf-8'))
+        await db.client.query(fs.readFileSync(__dirname+'/sql/create_apis.sql','utf-8'))
         logger.info('Created relevant PL/pgSQL functions and types')
     },
     fkExists: async (fk: string) => {

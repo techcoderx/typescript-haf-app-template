@@ -11,9 +11,11 @@ const MASSIVE_SYNC_BATCH = 1000
 const sync = {
     terminating: false,
     prebegin: async () => {
+        // update functions
+        await schema.createFx()
+
         // attach context
-        let head = (await db.client.query(`SELECT last_processed_block FROM ${SCHEMA_NAME}.state;`)).rows[0].last_processed_block
-        await context.attach(head)
+        await context.attach()
         sync.begin()
     },
     begin: async (): Promise<void> => {
