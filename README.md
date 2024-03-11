@@ -19,6 +19,11 @@ Replace every instance of `myhaf_api` with your actual HAF app API schema name i
 * PostgREST start scripts in [scripts](https://github.com/techcoderx/typescript-haf-app-template/tree/main/scripts) folder (including docker)
 * This README file
 
+Replace every instance of `myhaf_owner` with your actual HAF app owner role in:
+* [src/sql/create_apis.sql](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/sql/create_apis.sql)
+* [src/sql/builtin_roles.sql](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/sql/builtin_roles.sql)
+* This README file
+
 Replace every instance of `myhaf_user` with your actual HAF app API user in:
 * [src/sql/create_apis.sql](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/sql/create_apis.sql)
 * PostgREST start scripts in [scripts](https://github.com/techcoderx/typescript-haf-app-template/tree/main/scripts) folder (including docker)
@@ -77,11 +82,8 @@ A sample [Dockerfile](https://github.com/techcoderx/typescript-haf-app-template/
 ## Setup
 
 ### PostgreSQL Roles
-```pgsql
-CREATE ROLE myhaf_app WITH LOGIN PASSWORD 'hafapppass' CREATEROLE INHERIT IN ROLE hive_applications_group;
-CREATE ROLE myhaf_user WITH LOGIN INHERIT IN ROLE hive_applications_group;
-GRANT CREATE ON DATABASE block_log TO myhaf_app;
-GRANT myhaf_user TO myhaf_app;
+```bash
+psql -f src/sql/builtin_roles.sql haf_block_log
 ```
 
 ### PostgREST Installation
@@ -113,7 +115,7 @@ npm start
 
 ## Start PostgREST server
 ```bash
-./scripts/postgrest_start.sh postgres://myhaf_app:<myhaf_app_password>@localhost:5432/block_log <server_port>
+./scripts/postgrest_start.sh postgres://myhaf_user:<myhaf_user_password>@localhost:5432/block_log <server_port>
 ```
 
 ## Start Express server

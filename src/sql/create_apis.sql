@@ -1,5 +1,7 @@
+SET ROLE myhaf_owner;
+
 DROP SCHEMA IF EXISTS myhaf_api CASCADE;
-CREATE SCHEMA IF NOT EXISTS myhaf_api AUTHORIZATION myhaf_app;
+CREATE SCHEMA IF NOT EXISTS myhaf_api AUTHORIZATION myhaf_owner;
 GRANT USAGE ON SCHEMA myhaf_api TO myhaf_user;
 GRANT USAGE ON SCHEMA myhaf_app TO myhaf_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA myhaf_api TO myhaf_user;
