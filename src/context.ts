@@ -1,7 +1,7 @@
 import { APP_CONTEXT } from './constants.js'
 import logger from './logger.js'
 import db from './db.js'
-import { AppNextBlock } from './processor.js'
+import { AppNextBlock } from './processor_types.js'
 
 const context = {
     exists: async () => {
