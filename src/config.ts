@@ -9,14 +9,6 @@ const config = yargs(process.argv)
             type: 'string',
             default: 'postgres://username:password@127.0.0.1:5432/block_log'
         },
-        httpHost: {
-            type: 'string',
-            default: '127.0.0.1'
-        },
-        httpPort: {
-            type: 'number',
-            default: 3010
-        },
         logLevel: {
             type: 'string',
             default: 'info'
