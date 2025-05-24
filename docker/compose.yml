@@ -1,0 +1,79 @@
+services:
+  myhaf-install:
+    image: myhaf-app:${HAFAPP_VERSION:-${HIVE_API_NODE_VERSION}}
+    profiles:
+      - apps
+      - myhaf
+    environment:
+      POSTGRES_HOST: haf
+    command:
+      - install_app
+    networks:
+      haf-network:
+    depends_on:
+      haf:
+        condition: service_healthy
+  myhaf-uninstall:
+    image: myhaf-app:${HAFAPP_VERSION:-${HIVE_API_NODE_VERSION}}
+    profiles:
+      - myhaf-uninstall
+    environment:
+      POSTGRES_HOST: haf
+    command:
+      - uninstall_app
+    networks:
+      haf-network:
+    depends_on:
+      haf:
+        condition: service_healthy
+  myhaf-block-processing:
+    image: myhaf-app:${HAFAPP_VERSION:-${HIVE_API_NODE_VERSION}}
+    profiles:
+      - apps
+      - myhaf
+    environment:
+      POSTGRES_URL: postgresql://myhaf_owner@haf/haf_block_log
+      HAFAPP_LOG_LEVEL: ${HAFAPP_LOG_LEVEL:-info}
+    command:
+      - process_blocks
+    healthcheck:
+      test: ["CMD-SHELL","/app/scripts/block_processing_healthcheck.sh || exit 1"]
+      interval: 10s
+      timeout: 2s
+      retries: 10
+      start_period: 15m
+    networks:
+      haf-network:
+    depends_on:
+      myhaf-install:
+        condition: service_completed_successfully
+      haf:
+        condition: service_healthy
+  myhaf-postgrest:
+    image: ${POSTGREST_REGISTRY:-registry.gitlab.syncad.com/hive/haf_api_node/postgrest}:${POSTGREST_VERSION:-latest}
+    profiles:
+      - apps
+      - myhaf
+    environment:
+      PGRST_ADMIN_SERVER_PORT: 3001
+      PGRST_DB_URI: postgresql://myhaf_user@haf/haf_block_log
+      PGRST_DB_SCHEMA: myhaf_api
+      PGRST_DB_ANON_ROLE: myhaf_user
+      PGRST_DB_ROOT_SPEC: home
+      PGRST_DB_POOL: 20
+      PGRST_DB_POOL_ACQUISITION_TIMEOUT: 10
+    networks:
+      haf-network:
+    healthcheck:
+      test: ["CMD-SHELL", "wget --timeout=2 -nv -t1 --spider 127.0.0.1:3001/ready || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 1m
+    depends_on:
+      myhaf-install:
+        condition: service_completed_successfully
+      myhaf-block-processing:
+        condition: service_healthy
+      haf:
+        condition: service_healthy

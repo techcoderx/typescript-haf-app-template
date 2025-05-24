@@ -10,6 +10,7 @@ Replace every instance of `myhaf_app` with your actual HAF app name in:
 * All SQL files in [src/sql](https://github.com/techcoderx/typescript-haf-app-template/tree/main/src/sql) folder
 * [src/constants.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/constants.ts)
 * [.env.example](https://github.com/techcoderx/typescript-haf-app-template/blob/main/.env.example)
+* [scripts/block_processing_healthcheck.sh](https://github.com/techcoderx/typescript-haf-app-template/blob/main/scripts/block_processing_healthcheck.sh)
 * This README file
 
 Replace every instance of `myhaf_api` with your actual HAF app API schema name in:
@@ -17,22 +18,29 @@ Replace every instance of `myhaf_api` with your actual HAF app API schema name i
 * [src/sql/drop_db.sql](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/sql/drop_db.sql)
 * [src/server.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/server.ts)
 * PostgREST start scripts in [scripts](https://github.com/techcoderx/typescript-haf-app-template/tree/main/scripts) folder (including docker)
+* [docker/compose.yml](https://github.com/techcoderx/typescript-haf-app-template/blob/main/docker/compose.yml)
 * This README file
 
 Replace every instance of `myhaf_owner` with your actual HAF app owner role in:
 * [src/sql/create_apis.sql](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/sql/create_apis.sql)
 * [src/sql/builtin_roles.sql](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/sql/builtin_roles.sql)
+* [scripts/block_processing_healthcheck.sh](https://github.com/techcoderx/typescript-haf-app-template/blob/main/scripts/block_processing_healthcheck.sh)
+* [Dockerfile](https://github.com/techcoderx/typescript-haf-app-template/blob/main/Dockerfile)
+* [docker/compose.yml](https://github.com/techcoderx/typescript-haf-app-template/blob/main/docker/compose.yml)
 * This README file
 
 Replace every instance of `myhaf_user` with your actual HAF app API user in:
 * [src/sql/create_apis.sql](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/sql/create_apis.sql)
 * PostgREST start scripts in [scripts](https://github.com/techcoderx/typescript-haf-app-template/tree/main/scripts) folder (including docker)
+* [docker/compose.yml](https://github.com/techcoderx/typescript-haf-app-template/blob/main/docker/compose.yml)
 * This README file
 
 Replace the environment variable prefix `HAFAPP` in:
 * [.env.example](https://github.com/techcoderx/typescript-haf-app-template/blob/main/.env.example)
 * [Dockerfile](https://github.com/techcoderx/typescript-haf-app-template/blob/main/Dockerfile)
 * [config.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/config.ts)
+* [scripts/docker_entrypoint.sh](https://github.com/techcoderx/typescript-haf-app-template/blob/main/scripts/docker_entrypoint.sh)
+* This README file
 
 ### Table Definitions
 
@@ -48,9 +56,7 @@ Define all operation processing methods in the same file.
 
 ### API Definitions
 
-Define PostgREST API definitions in [src/sql/create_apis.sql](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/sql/create_apis.sql) file under the HAF app API schema. For APIs that must be written in TypeScript, define the Express API methods in [src/server.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/server.ts).
-
-Define Express API request types in [src/server_types.ts](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/server_types.ts).
+Define PostgREST API definitions in [src/sql/create_apis.sql](https://github.com/techcoderx/typescript-haf-app-template/blob/main/src/sql/create_apis.sql) file under the HAF app API schema.
 
 ### Config Definitions
 
@@ -66,7 +72,11 @@ Import the required state providers in [src/schema.ts](https://github.com/techco
 
 ### Docker
 
-A sample [Dockerfile](https://github.com/techcoderx/typescript-haf-app-template/blob/main/Dockerfile) is supplied in this template. Replace all instances of `hafapp` with your app name, and substitute environment variables with your defined prefix. Additionally, adjust the names in [scripts/postgrest_docker_start.sh](https://github.com/techcoderx/typescript-haf-app-template/blob/main/scripts/postgrest_docker_start.sh) file accordingly.
+A sample [Dockerfile](https://github.com/techcoderx/typescript-haf-app-template/blob/main/Dockerfile) and [compose.yml](https://github.com/techcoderx/typescript-haf-app-template/blob/main/docker/compose.yml) is supplied in this template.
+
+* Replace all instances of `myhaf_owner` with your app user.
+* Replace the image names in [scripts/build_instance.sh](https://github.com/techcoderx/typescript-haf-app-template/blob/main/scripts/build_instance.sh) and [docker/compose.yml](https://github.com/techcoderx/typescript-haf-app-template/blob/main/docker/compose.yml).
+* Replace compose service and profile names in [docker/compose.yml](https://github.com/techcoderx/typescript-haf-app-template/blob/main/docker/compose.yml) and this README file.
 
 ### Everything Else
 
@@ -76,8 +86,35 @@ A sample [Dockerfile](https://github.com/techcoderx/typescript-haf-app-template/
 
 ## Required Dependencies
 
-* `nodejs` and `npm` (Latest LTS, v18 minimum supported)
-* Synced [HAF](https://gitlab.syncad.com/hive/haf) node
+* Synced [HAF](https://gitlab.syncad.com/hive/haf) node, ideally using [`haf_api_node`](https://gitlab.syncad.com/hive/haf_api_node) compose
+
+## Docker Setup
+
+This assumes HAF is running through [`haf_api_node`](https://gitlab.syncad.com/hive/haf_api_node).
+
+Clone this repository, then add the following in the `.env` file in `haf_api_node` directory:
+
+```env
+COMPOSE_FILE="${COMPOSE_FILE}:/path/to/myhaf/repo/docker/compose.yml"
+HAFAPP_VERSION=latest
+```
+
+Build the Docker image:
+
+```sh
+cd /path/to/myhaf/repo
+./scripts/build_instance.sh
+```
+
+Run the HAF app sync:
+```sh
+docker compose up -d myhaf-app-block-processing
+```
+
+Run the PostgREST server:
+```sh
+docker compose up -d myhaf-app-postgrest
+```
 
 ## Setup
 
@@ -116,9 +153,4 @@ npm start
 ## Start PostgREST server
 ```bash
 ./scripts/postgrest_start.sh postgres://myhaf_user:<myhaf_user_password>@localhost:5432/block_log <server_port>
-```
-
-## Start Express server
-```bash
-npm run server
 ```
