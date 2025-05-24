@@ -1,7 +1,11 @@
-import { APP_CONTEXT } from './constants.js'
+import { APP_CONTEXT, SCHEMA_NAME } from './constants.js'
 import logger from './logger.js'
 import db from './db.js'
-import { AppNextBlock } from './processor_types.js'
+
+type AppNextBlock = {
+    first_block?: number
+    last_block?: number
+}
 
 const context = {
     exists: async () => {
@@ -11,7 +15,7 @@ const context = {
     create: async () => {
         if (await context.exists())
             return logger.info('App context already exists, skipping app context creation')
-        await db.client.query('SELECT hive.app_create_context($1,$2);',[APP_CONTEXT,false])
+        await db.client.query('SELECT hive.app_create_context($1,$2,$3::BOOLEAN,$4::BOOLEAN);',[APP_CONTEXT,SCHEMA_NAME,false,true])
         logger.info('Created app context',APP_CONTEXT)
     },
     attach: async () => {

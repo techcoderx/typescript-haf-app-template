@@ -68,7 +68,7 @@ const schema = {
     },
     loaded: async () => {
         let schemaTbls = await db.client.query('SELECT 1 FROM pg_catalog.pg_tables WHERE schemaname=$1;',[SCHEMA_NAME])
-        return schemaTbls.rowCount > 0
+        return schemaTbls.rowCount && schemaTbls.rowCount > 0
     },
     createFx: async () => {
         await db.client.query(fs.readFileSync(__dirname+'/sql/create_functions.sql','utf-8'))
@@ -77,7 +77,7 @@ const schema = {
     },
     fkExists: async (fk: string) => {
         let constraint = await db.client.query('SELECT * FROM information_schema.constraint_column_usage WHERE constraint_name=$1',[fk])
-        return constraint.rowCount > 0
+        return constraint.rowCount && constraint.rowCount > 0
     },
     fkCreate: async () => {
         for (let fk in HAF_FKS) {
@@ -101,7 +101,7 @@ const schema = {
             }
     },
     indexExists: async (index_name: string): Promise<boolean> => {
-        return (await db.client.query('SELECT * FROM pg_indexes WHERE schemaname=$1 AND indexname=$2',[SCHEMA_NAME, index_name])).rowCount > 0
+        return ((await db.client.query('SELECT * FROM pg_indexes WHERE schemaname=$1 AND indexname=$2',[SCHEMA_NAME, index_name])).rowCount || 0) > 0
     },
     indexCreate: async () => {
         for (let idx in INDEXES) {

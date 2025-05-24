@@ -1,7 +1,12 @@
 import { CUSTOM_JSON_ID, SCHEMA_NAME } from './constants.js'
 import db from './db.js'
 import logger from './logger.js'
-import { ParsedOp } from './processor_types.js'
+
+type ParsedOp = {
+    valid: boolean
+    ts?: Date
+    user?: string
+}
 
 const processor = {
     validateAndParse: async (op: any, ts: Date): Promise<ParsedOp> => {
