@@ -1,3 +1,4 @@
+import 'source-map-support/register.js'
 import yargs from 'yargs'
 import * as dotenv from 'dotenv'
 
