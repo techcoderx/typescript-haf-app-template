@@ -116,6 +116,15 @@ Run the PostgREST server:
 docker compose up -d myhaf-app-postgrest
 ```
 
+You may need to add the following entries to `PG_ACCESS` in `haf_base.yml`:
+```
+host    haf_block_log    haf_admin     ${COMPOSE_PROJECT_NAME}-myhaf-install-1.${NETWORK_NAME}            trust\n
+host    haf_block_log    myhaf_owner   ${COMPOSE_PROJECT_NAME}-myhaf-install-1.${NETWORK_NAME}            trust\n
+host    haf_block_log    myhaf_owner   ${COMPOSE_PROJECT_NAME}-myhaf-block-processing-1.${NETWORK_NAME}   trust\n
+host    haf_block_log    myhaf_user    ${COMPOSE_PROJECT_NAME}-myhaf-postgrest-1.${NETWORK_NAME}          trust\n
+host    haf_block_log    haf_admin     ${COMPOSE_PROJECT_NAME}-myhaf-uninstall-1.${NETWORK_NAME}          trust\n
+```
+
 ## Setup
 
 ### PostgreSQL Roles
